@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <%- include('../partials/head', { title: 'Clientes - Pazine Barber' }) %>
+</head>
+<body class="app-body">
+  <%- include('../partials/sidebar', { active: 'clients', userName: userName }) %>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Clientes</h1>
+      <a href="/clients/new" class="btn btn-gold">+ Novo Cliente</a>
+    </div>
+
+    <form action="/clients" method="GET" class="search-form">
+      <input type="text" name="q" placeholder="Buscar por nome..." value="<%= search %>">
+      <button type="submit" class="btn btn-outline">Buscar</button>
+    </form>
+
+    <div class="panel">
+      <% if (clients.length === 0) { %>
+        <p class="empty-state">Nenhum cliente encontrado. <a href="/clients/new">Cadastrar novo cliente</a></p>
+      <% } else { %>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Contato</th>
+              <th>Serviço</th>
+              <th>Valor (R$)</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% clients.forEach(function(c) { %>
+              <tr>
+                <td><%= c.name %></td>
+                <td><%= c.phone || c.email || '-' %></td>
+                <td><%= c.project_name || '-' %></td>
+                <td>R$ <%= c.project_value.toFixed(2) %></td>
+                <td><span class="status-badge status-<%= c.status.toLowerCase().replace(/\s+/g, '-') %>"><%= c.status %></span></td>
+                <td class="actions-cell">
+                  <a href="/clients/<%= c.id %>/edit" class="link-edit">Editar</a>
+                  <form action="/clients/<%= c.id %>/delete" method="POST" class="inline-form" onsubmit="return confirm('Tem certeza que deseja excluir este cliente?');">
+                    <button type="submit" class="link-delete">Excluir</button>
+                  </form>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+  </main>
+</body>
+</html>

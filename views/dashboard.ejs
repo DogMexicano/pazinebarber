@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <%- include('partials/head', { title: 'Painel - Pazine Barber' }) %>
+</head>
+<body class="app-body">
+  <%- include('partials/sidebar', { active: 'dashboard', userName: userName }) %>
+
+  <main class="main-content">
+    <h1>Painel de Controle</h1>
+    <p class="subtitle">Bem-vindo de volta, <%= userName %>!</p>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Total de Clientes</span>
+        <span class="stat-value"><%= totalClients %></span>
+      </div>
+      <div class="stat-card stat-gold">
+        <span class="stat-label">Faturamento (Finalizado)</span>
+        <span class="stat-value">R$ <%= faturamentoTotal.toFixed(2) %></span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Receita Prevista</span>
+        <span class="stat-value">R$ <%= receitaPrevista.toFixed(2) %></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Status dos Atendimentos</h2>
+      <% if (statusBreakdown.length === 0) { %>
+        <p class="empty-state">Nenhum atendimento cadastrado ainda.</p>
+      <% } else { %>
+        <table class="data-table">
+          <thead>
+            <tr><th>Status</th><th>Quantidade</th><th>Total (R$)</th></tr>
+          </thead>
+          <tbody>
+            <% statusBreakdown.forEach(function(row) { %>
+              <tr>
+                <td><span class="status-badge status-<%= row.status.toLowerCase().replace(/\s+/g, '-') %>"><%= row.status %></span></td>
+                <td><%= row.count %></td>
+                <td>R$ <%= row.total.toFixed(2) %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+
+    <div class="panel">
+      <h2>Clientes Recentes</h2>
+      <% if (recentClients.length === 0) { %>
+        <p class="empty-state">Nenhum cliente cadastrado ainda. <a href="/clients/new">Cadastrar o primeiro</a></p>
+      <% } else { %>
+        <table class="data-table">
+          <thead>
+            <tr><th>Nome</th><th>Serviço</th><th>Valor (R$)</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <% recentClients.forEach(function(c) { %>
+              <tr>
+                <td><%= c.name %></td>
+                <td><%= c.project_name || '-' %></td>
+                <td>R$ <%= c.project_value.toFixed(2) %></td>
+                <td><span class="status-badge status-<%= c.status.toLowerCase().replace(/\s+/g, '-') %>"><%= c.status %></span></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+  </main>
+</body>
+</html>
